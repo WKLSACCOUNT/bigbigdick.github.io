@@ -3,10 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的第一个网站</title>
+    <title>【改成你的名字】的个人主页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+        .header-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .tagline {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .link-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .link-btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .link-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        .content-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+        p {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .header-card, .content-card {
+                padding: 30px 20px;
+            }
+            .container {
+                padding: 40px 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>你好！我的网站上线啦！</h1>
-    <p>这是我用免费托管平台搭建的个人网站</p>
+    <div class="container">
+        <!-- 头部名片 -->
+        <div class="header-card">
+            <div class="avatar">
+                <!-- 这里可以改成你名字的首字母，比如姓李就写L -->
+                W
+            </div>
+            <h1>你好，我是【改成你的名字】</h1>
+            <p class="tagline">【改成你的一句话介绍，比如：一个热爱技术的普通人 / 前端开发爱好者】</p>
+            <div class="link-group">
+                <!-- 下面的按钮可以自己增删，改链接和文字 -->
+                <a href="【改成你的GitHub链接】" class="link-btn" target="_blank">GitHub</a>
+                <a href="mailto:【改成你的邮箱】" class="link-btn">联系我</a>
+                <a href="#about" class="link-btn">关于我</a>
+            </div>
+        </div>
+
+        <!-- 关于我板块 -->
+        <div class="content-card" id="about">
+            <h2>关于我</h2>
+            <p>这里可以写你的个人介绍，比如你的兴趣爱好、擅长的技能、学习经历等等。</p>
+            <p>比如：我目前正在学习前端开发，喜欢折腾各种有趣的小项目，这个网站就是用GitHub Pages免费搭建的。</p>
+        </div>
+
+        <!-- 作品/项目板块 -->
+        <div class="content-card">
+            <h2>我的项目</h2>
+            <p>这里可以放你的项目介绍、作品链接，比如：</p>
+            <p>✅ 个人博客网站 - 用Hexo搭建的静态博客</p>
+            <p>✅ 微信小程序 - 一个简单的工具类小程序</p>
+            <p>✅ 这个个人主页 - 基于GitHub Pages搭建</p>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>© 2024 【改成你的名字】| 本站由 GitHub Pages 提供支持</p>
+        </div>
+    </div>
 </body>
 </html>
