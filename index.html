@@ -1,151 +1,61 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>武呜呜呜呜的个人主页</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            color: #2c3e50;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 80px 20px;
-        }
-        .header-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 60px 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 0 auto 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-        }
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            color: #2c3e50;
-        }
-        .tagline {
-            font-size: 1.1rem;
-            color: #7f8c8d;
-            margin-bottom: 30px;
-        }
-        .link-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 30px;
-        }
-        .link-btn {
-            padding: 12px 30px;
-            border-radius: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        .link-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-        .content-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #667eea;
-        }
-        p {
-            color: #555;
-            margin-bottom: 15px;
-            font-size: 1rem;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #7f8c8d;
-            font-size: 0.9rem;
-        }
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-            }
-            .header-card, .content-card {
-                padding: 30px 20px;
-            }
-            .container {
-                padding: 40px 15px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>欢迎页面</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 100px; }
+    input, button { padding: 10px; margin: 5px; font-size: 16px; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- 头部名片 -->
-        <div class="header-card">
-            <div class="avatar">
-                <!-- 这里可以改成你名字的首字母，比如姓李就写L -->
-                W
-            </div>
-            <h1>你好，我是武呜呜</h1>
-            <p class="tagline">一个热爱生活的人 / 前端开发爱好者】</p>
-            <div class="link-group">
-                <!-- 下面的按钮可以自己增删，改链接和文字 -->
-                <a href="【改成你的GitHub链接】" class="link-btn" target="_blank">GitHub</a>
-                <a href="mailto:2589584304@QQ.com" class="link-btn">联系我</a>
-                <a href="#about" class="link-btn">关于我</a>
-            </div>
-        </div>
+  <div id="content">
+    <h1 id="greeting">请先输入用户名</h1>
+    <input type="text" id="username" placeholder="用户名">
+    <button id="submitBtn">提交</button>
+  </div>
 
-        <!-- 关于我板块 -->
-        <div class="content-card" id="about">
-            <h2>关于我</h2>
-            <p>就读于蚌埠医科大学，今年21岁，热爱生活，热爱一切美好事物</p>
-            <p>比如：我目前正在学习前端开发，喜欢折腾各种有趣的小项目，这个网站就是用GitHub Pages免费搭建的。</p>
-        </div>
+  <script>
+    const API_URL = "https://my-d1-api.your-subdomain.workers.dev"; // 替换为你的 Worker URL
+    const API_KEY = "my-secret-key"; // 如果 Worker 使用了 API Key
 
-        <!-- 作品/项目板块 -->
-        <div class="content-card">
-            <h2>我的项目</h2>
-            <p>✅ 个人博客网站 - 用Hexo搭建的静态博客</p>
-            <p>✅ 微信小程序 - 一个简单的工具类小程序</p>
-            <p>✅ 这个个人主页 - 基于GitHub Pages搭建</p>
-        </div>
+    // 获取已存用户名
+    async function loadUsername() {
+      try {
+        const res = await fetch(API_URL + "/users");
+        const users = await res.json();
+        if (users.length > 0) {
+          const name = users[0].name;
+          document.getElementById("greeting").textContent = `欢迎您，${name}！`;
+          document.getElementById("username").style.display = "none";
+          document.getElementById("submitBtn").style.display = "none";
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
 
-        <!-- 页脚 -->
-        <div class="footer">
-            <p>© 2024 【改成你的名字】| 本站由 GitHub Pages 提供支持</p>
-        </div>
-    </div>
+    // 提交用户名
+    document.getElementById("submitBtn").addEventListener("click", async () => {
+      const name = document.getElementById("username").value.trim();
+      if (!name) return alert("请输入用户名");
+
+      await fetch(API_URL + "/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${API_KEY}`
+        },
+        body: JSON.stringify({ name: name, age: 0 }) // age 可随意填
+      });
+
+      document.getElementById("greeting").textContent = `欢迎您，${name}！`;
+      document.getElementById("username").style.display = "none";
+      document.getElementById("submitBtn").style.display = "none";
+    });
+
+    // 页面加载时先检查是否已有用户名
+    loadUsername();
+  </script>
 </body>
 </html>
