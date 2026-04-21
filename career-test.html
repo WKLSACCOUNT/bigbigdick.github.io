@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>职业本性测试 - 发现你的职业本性</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #d4c5f9 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* 首页样式 */
+        .welcome-page {
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .welcome-page h1 {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .welcome-page p {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #7cc5be;
+            border: none;
+            padding: 18px 60px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* 答题页面样式 */
+        .quiz-page {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .progress-indicator {
+            flex: 1;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 0 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #a8edea, #d4c5f9);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option-card {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            background: #fafafa;
+        }
+
+        .option-card:hover {
+            border-color: #7cc5be;
+            background: #e8faf8;
+        }
+
+        .option-card.selected {
+            border-color: #7cc5be;
+            background: linear-gradient(135deg, #a8edea15, #d4c5f915);
+            box-shadow: 0 4px 15px rgba(124, 197, 190, 0.3);
+        }
+
+        .option-label {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #7cc5be;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .btn-nav {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-prev {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn-prev:hover:not(:disabled) {
+            background: #e0e0e0;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #a8edea, #d4c5f9);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-next:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(124, 197, 190, 0.4);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 加载页面样式 */
+        .loading-page {
+            text-align: center;
+            color: white;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .loading-page h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* 结果页面样式 */
+        .result-page {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .result-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .result-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .result-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+        }
+
+        .result-card.primary {
+            padding: 45px;
+            border: 3px solid #7cc5be;
+        }
+
+        .result-card.secondary {
+            padding: 25px;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #a8edea, #d4c5f9);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .occupation-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .result-card.secondary .occupation-name {
+            font-size: 1.4rem;
+        }
+
+        .role-tag {
+            color: #7cc5be;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .match-percentage {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .percentage-bar {
+            flex: 1;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .percentage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #a8edea, #d4c5f9);
+            border-radius: 6px;
+            transition: width 1s ease-out;
+        }
+
+        .percentage-text {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #7cc5be;
+            min-width: 60px;
+        }
+
+        .btn-restart {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 40px auto 0;
+            background: white;
+            color: #7cc5be;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .btn-restart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .welcome-page h1 {
+                font-size: 2.2rem;
+            }
+
+            .welcome-page p {
+                font-size: 1.1rem;
+            }
+
+            .quiz-page {
+                padding: 25px;
+            }
+
+            .question-text {
+                font-size: 1.3rem;
+            }
+
+            .option-card {
+                padding: 16px;
+                font-size: 1rem;
+            }
+
+            .result-card.primary {
+                padding: 30px;
+            }
+
+            .occupation-name {
+                font-size: 1.5rem;
+            }
+
+            .result-card.secondary .occupation-name {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            .welcome-page h1 {
+                font-size: 1.8rem;
+            }
+
+            .btn-primary {
+                padding: 15px 40px;
+                font-size: 1.1rem;
+            }
+
+            .quiz-page {
+                padding: 20px;
+            }
+
+            .question-text {
+                font-size: 1.2rem;
+            }
+
+            .option-card {
+                padding: 14px;
+                font-size: 0.95rem;
+            }
+
+            .btn-nav {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 欢迎页 -->
+        <div id="welcomePage" class="welcome-page">
+            <h1>发现你的职业本性</h1>
+            <p>30道题，找到不考虑薪资和前景时，你灵魂真正向往的职业</p>
+            <button class="btn-primary" onclick="startQuiz()">开始测试</button>
+        </div>
+
+        <!-- 答题页 -->
+        <div id="quizPage" class="quiz-page hidden">
+            <div class="progress-bar">
+                <span id="progressText">第 1 题 / 共 30 题</span>
+                <div class="progress-indicator">
+                    <div id="progressFill" class="progress-fill" style="width: 3.33%"></div>
+                </div>
+                <span id="progressPercent">3%</span>
+            </div>
+            <div id="questionText" class="question-text"></div>
+            <div id="optionsContainer" class="options-container"></div>
+            <div class="navigation-buttons">
+                <button id="btnPrev" class="btn-nav btn-prev" onclick="prevQuestion()" disabled>上一题</button>
+                <button id="btnNext" class="btn-nav btn-next" onclick="nextQuestion()" disabled>下一题</button>
+            </div>
+        </div>
+
+        <!-- 加载页 -->
+        <div id="loadingPage" class="loading-page hidden">
+            <h2>正在分析你的职业倾向...</h2>
+            <div class="spinner"></div>
+            <p class="loading-text">基于五维向量算法计算匹配度</p>
+        </div>
+
+        <!-- 结果页 -->
+        <div id="resultPage" class="result-page hidden">
+            <div class="result-header">
+                <h2>你的灵魂职业是...</h2>
+                <p>基于你的内在倾向，以下是与你最匹配的职业</p>
+            </div>
+            <div id="resultsContainer"></div>
+            <button class="btn-restart" onclick="restartQuiz()">重新测试</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // 数据配置区
+        // ============================================
+        // 说明：以下是示例数据，请将完整的30道题目和94个职业数据替换此处
+        // 方式1：直接替换下方的示例数组为完整JSON数据
+        // 方式2：使用fetch加载外部JSON文件（见代码底部的注释说明）
+
+        // 题目数据 - 示例（请替换为完整30题）
+        const QUESTIONS_DATA = [
+            {
+                "id": 1,
+                "text": "周末有一整天空闲，你本能地最想做什么？",
+                "options": [
+                    { "label": "A", "text": "拆解一个旧电器，研究内部构造。", "vector": [2, -1, 1, 1, -1] },
+                    { "label": "B", "text": "约两三个好友深度聊天，分享近期思考。", "vector": [-2, 1, -1, -1, 1] },
+                    { "label": "C", "text": "读一本科幻小说或哲学随笔。", "vector": [1, 2, 0, 2, 0] },
+                    { "label": "D", "text": "把积攒的家务修理清单全部做完。", "vector": [1, -2, 2, 1, -2] }
+                ]
+            },
+            {
+                "id": 2,
+                "text": "\u5f53\u770b\u5230\u201c\u7075\u9b42\u4f34\u4fa3\u201d\u8fd9\u4e2a\u8bcd\u65f6\uff0c\u4f60\u7684\u7b2c\u4e00\u53cd\u5e94\u66f4\u63a5\u8fd1\uff1f",
+                "options": [
+                    { "label": "A", "text": "听起来很美，但不如一个可靠的搭档实在。", "vector": [1, -1, 1, 0, -1] },
+                    { "label": "B", "text": "一生所求，关系深度决定生命质量。", "vector": [-2, 1, -1, -2, 1] },
+                    { "label": "C", "text": "这个概念太虚了，我只相信共同目标下的协作。", "vector": [0, -1, 2, -1, -2] },
+                    { "label": "D", "text": "能一起探讨宇宙奥秘的人，就是灵魂伴侣。", "vector": [0, 2, 0, 1, 1] }
+                ]
+            },
+            {
+                "id": 3,
+                "text": "你更享受以下哪种工作节奏？",
+                "options": [
+                    { "label": "A", "text": "每天处理不同客户的新鲜需求。", "vector": [-2, -1, -2, -1, 1] },
+                    { "label": "B", "text": "按既定流程，高效完成当天指标。", "vector": [1, -2, 2, 0, -2] },
+                    { "label": "C", "text": "连续几天沉浸在一个复杂问题的推演中。", "vector": [2, 2, 1, 2, -1] },
+                    { "label": "D", "text": "在团队头脑风暴中碰撞出新点子。", "vector": [-1, 1, -1, -2, 2] }
+                ]
+            },
+            {
+                "id": 4,
+                "text": "面对一个从未用过的工具/软件，你通常？",
+                "options": [
+                    { "label": "A", "text": "直接上手点按尝试，看会发生什么。", "vector": [1, -1, -1, 1, 0] },
+                    { "label": "B", "text": "先看说明书或教程，理解逻辑后再操作。", "vector": [1, 1, 1, 2, -1] },
+                    { "label": "C", "text": "找用过的人问一下关键技巧。", "vector": [-2, 0, 0, -1, 0] },
+                    { "label": "D", "text": "只要它能完成我要的那件事就行，不求甚解。", "vector": [0, -2, 0, 0, -1] }
+                ]
+            },
+            {
+                "id": 5,
+                "text": "\u4f60\u66f4\u613f\u610f\u6210\u4e3a\u4ee5\u4e0b\u54ea\u79cd\u201c\u8fb9\u7f18\u4eba\u201d\uff1f",
+                "options": [
+                    { "label": "A", "text": "隐居深山的程序员，靠代码养活自己。", "vector": [2, 1, 1, 2, -2] },
+                    { "label": "B", "text": "流浪四方的吟游诗人，靠故事换饭吃。", "vector": [-1, 1, -2, 1, 2] },
+                    { "label": "C", "text": "修道院里的抄经人，重复着永恒的宁静。", "vector": [1, -1, 2, 2, -2] },
+                    { "label": "D", "text": "马戏团后台的万能工匠，修一切道具。", "vector": [2, -2, -1, 1, -1] }
+                ]
+            },
+            {
+                "id": 6,
+                "text": "哪种工作任务让你觉得\u201c\u65f6\u95f4\u8fc7\u5f97\u7279\u522b\u5feb\u201d\uff1f",
+                "options": [
+                    { "label": "A", "text": "制作一个精美的 Excel 图表或 PPT。", "vector": [2, -1, 1, 1, -1] },
+                    { "label": "B", "text": "给新人做培训，分享自己的经验。", "vector": [-2, 0, -1, -2, 2] },
+                    { "label": "C", "text": "写一份逻辑严密的分析报告。", "vector": [1, 2, 1, 2, 1] },
+                    { "label": "D", "text": "在车间里把零件打磨到完美公差。", "vector": [2, -2, 2, 1, -2] }
+                ]
+            },
+            {
+                "id": 7,
+                "text": "你觉得以下哪件事最消耗你的能量？",
+                "options": [
+                    { "label": "A", "text": "参加一场全是陌生人的酒会。", "vector": [0, 0, 0, 1, -1] },
+                    { "label": "B", "text": "反复核对一份合同的错别字。", "vector": [1, -1, 1, 0, -1] },
+                    { "label": "C", "text": "连续三天没有任何人跟你说话。", "vector": [-1, 0, 0, -1, 0] },
+                    { "label": "D", "text": "计划突然被打乱，被迫临时应变。", "vector": [0, 0, 1, 0, 0] }
+                ]
+            },
+            {
+                "id": 8,
+                "text": "你更欣赏哪种类型的电影导演？",
+                "options": [
+                    { "label": "A", "text": "把平凡生活拍出诗意的（如 是枝裕和）。", "vector": [-1, 1, 1, 1, 1] },
+                    { "label": "B", "text": "构建宏大世界观和视觉奇观的（如 诺兰）。", "vector": [1, 2, -1, 0, 1] },
+                    { "label": "C", "text": "极度写实、刀刀见血的（如 达内兄弟）。", "vector": [0, -1, -1, 1, -1] },
+                    { "label": "D", "text": "善于调度千人场面的大师（如 大卫·里恩）。", "vector": [-1, -1, -2, -2, 1] }
+                ]
+            },
+            {
+                "id": 9,
+                "text": "如果你有一个花园，你会优先把它变成？",
+                "options": [
+                    { "label": "A", "text": "精确计算光照和土壤数据的育苗实验室。", "vector": [2, 1, 2, 1, -1] },
+                    { "label": "B", "text": "随意生长、充满野趣的自然保留地。", "vector": [1, 0, -2, 1, 0] },
+                    { "label": "C", "text": "定期邀请朋友来烧烤聚会的露天客厅。", "vector": [-2, -1, -1, -2, 1] },
+                    { "label": "D", "text": "几何对称、修剪整齐的古典园林。", "vector": [1, -2, 2, 1, -1] }
+                ]
+            },
+            {
+                "id": 10,
+                "text": "假如你必须选择一个\u201c\u8d85\u80fd\u529b\u201d\uff0c\u4f60\u4f1a\u9009\uff1f",
+                "options": [
+                    { "label": "A", "text": "瞬间精通任何乐器的演奏技巧。", "vector": [1, 1, -1, 1, 2] },
+                    { "label": "B", "text": "能和动物进行简单沟通。", "vector": [1, -1, 0, 2, -1] },
+                    { "label": "C", "text": "永远不需要睡觉且保持精力充沛。", "vector": [0, 0, 2, 0, -2] },
+                    { "label": "D", "text": "让他人瞬间信任你。", "vector": [-2, 0, 0, -1, 2] }
+                ]
+            },
+            {
+                "id": 11,
+                "text": "你在团队中通常扮演什么角色？",
+                "options": [
+                    { "label": "A", "text": "提出关键问题、挑战假设的人。", "vector": [0, 1, -1, 0, 2] },
+                    { "label": "B", "text": "把模糊想法落地成执行清单的人。", "vector": [1, -1, 1, -1, -2] },
+                    { "label": "C", "text": "观察大家情绪、维系团队氛围的人。", "vector": [-2, 0, 0, -2, 1] },
+                    { "label": "D", "text": "独立领走一个模块，按时交付的人。", "vector": [1, 0, 1, 2, -1] }
+                ]
+            },
+            {
+                "id": 12,
+                "text": "阅读时，你更容易被哪种内容吸引？",
+                "options": [
+                    { "label": "A", "text": "严谨的数据和逻辑推导过程。", "vector": [2, 1, 1, 1, -1] },
+                    { "label": "B", "text": "生动的人物故事和情感描写。", "vector": [-2, -1, -1, 0, 1] },
+                    { "label": "C", "text": "清晰的操作步骤和实用指南。", "vector": [1, -2, 2, 0, -2] },
+                    { "label": "D", "text": "深刻的社会洞察和概念重构。", "vector": [-1, 2, 0, 1, 1] }
+                ]
+            },
+            {
+                "id": 13,
+                "text": "哪种评价其实会让你有点不舒服？",
+                "options": [
+                    { "label": "A", "text": "\u201c\u4f60\u8fd9\u4e2a\u4eba\u592a\u597d\u8bf4\u8bdd\u4e86\u3002\u201d", "vector": [-1, 0, 0, -1, 0] },
+                    { "label": "B", "text": "\u201c\u4f60\u8fd9\u4eba\u505a\u4e8b\u4e00\u677f\u4e00\u773c\u7684\u3002\u201d", "vector": [1, -1, 1, 0, -1] },
+                    { "label": "C", "text": "\u201c\u4f60\u6709\u65f6\u5019\u592a\u6c89\u6d78\u5728\u81ea\u5df1\u7684\u4e16\u754c\u4e86\u3002\u201d", "vector": [1, 1, 0, 2, -1] },
+                    { "label": "D", "text": "\u201c\u4f60\u603b\u662f\u6709\u5f88\u591a\u60f3\u6cd5\uff0c\u4f46\u4e0d\u592a\u843d\u5730\u3002\u201d", "vector": [0, 1, -1, 0, 1] }
+                ]
+            },
+            {
+                "id": 14,
+                "text": "选择工作环境时，你更在意？",
+                "options": [
+                    { "label": "A", "text": "办公桌的朝向和椅子的舒适度。", "vector": [1, -1, 1, 1, -1] },
+                    { "label": "B", "text": "团队氛围和同事是否有趣。", "vector": [-2, 0, -1, -2, 1] },
+                    { "label": "C", "text": "能否远程办公、自主安排时间。", "vector": [1, 0, -1, 2, 0] },
+                    { "label": "D", "text": "流程是否清晰、权责是否分明。", "vector": [0, -1, 2, -1, -2] }
+                ]
+            },
+            {
+                "id": 15,
+                "text": "如果去博物馆，你最可能在哪类展品前停留最久？",
+                "options": [
+                    { "label": "A", "text": "恐龙化石或矿物晶体。", "vector": [2, 0, 1, 1, -1] },
+                    { "label": "B", "text": "古代兵器或机械钟表。", "vector": [2, -1, 0, 1, -2] },
+                    { "label": "C", "text": "当代艺术装置（看不懂但受震撼）。", "vector": [0, 2, -2, 1, 2] },
+                    { "label": "D", "text": "反映民俗生活的情景复原。", "vector": [-1, -2, 1, 0, 0] }
+                ]
+            },
+            {
+                "id": 16,
+                "text": "\u4f60\u8ba4\u4e3a\u201c\u81ea\u7531\u201d\u66f4\u63a5\u8fd1\u4e8e\uff1f",
+                "options": [
+                    { "label": "A", "text": "有能力不做自己不想做的事。", "vector": [1, 1, 1, 2, -1] },
+                    { "label": "B", "text": "想去哪里就去哪里，没有束缚。", "vector": [0, -1, -2, 1, 0] },
+                    { "label": "C", "text": "思想和表达不受审查。", "vector": [0, 2, 0, 1, 2] },
+                    { "label": "D", "text": "在一个有序的框架内安心生活。", "vector": [1, -2, 2, -1, -2] }
+                ]
+            },
+            {
+                "id": 17,
+                "text": "解决一个棘手问题时，你倾向于？",
+                "options": [
+                    { "label": "A", "text": "召集相关人开个短会，快速对齐。", "vector": [-2, 0, -1, -2, 1] },
+                    { "label": "B", "text": "独自搜集大量资料，穷尽可能性。", "vector": [2, 1, 1, 2, -1] },
+                    { "label": "C", "text": "找一个有经验的人请教。", "vector": [-1, -1, 0, -1, 0] },
+                    { "label": "D", "text": "先动起来，边做边调整。", "vector": [1, -1, -2, 1, -1] }
+                ]
+            },
+            {
+                "id": 18,
+                "text": "\u4ee5\u4e0b\u54ea\u79cd\u201c\u65e0\u804a\u201d\u4f60\u6700\u4e0d\u80fd\u5fcd\u53d7\uff1f",
+                "options": [
+                    { "label": "A", "text": "重复机械地填写报表。", "vector": [1, -1, 1, 0, -1] },
+                    { "label": "B", "text": "听一个人讲你完全听不懂的抽象理论。", "vector": [0, 1, 0, 0, 0] },
+                    { "label": "C", "text": "一整天没人说话，只有环境音。", "vector": [0, 0, 0, -1, 0] },
+                    { "label": "D", "text": "每天都在做同样的事，毫无变化。", "vector": [0, 0, 1, 0, 0] }
+                ]
+            },
+            {
+                "id": 19,
+                "text": "你更愿意接手哪种项目？",
+                "options": [
+                    { "label": "A", "text": "从 0 到 1 的探索性项目。", "vector": [0, 1, -2, 1, 1] },
+                    { "label": "B", "text": "从 1 到 100 的标准化扩张项目。", "vector": [1, -1, 2, -2, -2] },
+                    { "label": "C", "text": "扭亏为盈的棘手烂摊子。", "vector": [-1, 0, -2, -1, 1] },
+                    { "label": "D", "text": "传承匠心的手艺活。", "vector": [2, -2, 2, 2, -2] }
+                ]
+            },
+            {
+                "id": 20,
+                "text": "\u4f60\u89c9\u5f97\u81ea\u5df1\u6027\u683c\u4e2d\u6700\u5927\u7684\u201c\u7f3a\u9677\u201d\u662f\uff1f",
+                "options": [
+                    { "label": "A", "text": "容易想太多，行动力不足。", "vector": [0, 1, 0, 1, 1] },
+                    { "label": "B", "text": "不太合群，显得冷漠。", "vector": [1, 0, 0, 2, -1] },
+                    { "label": "C", "text": "过于注重细节，缺乏大局观。", "vector": [1, -1, 1, 0, -1] },
+                    { "label": "D", "text": "太在意别人看法，容易妥协。", "vector": [-2, 0, 0, -2, 0] }
+                ]
+            },
+            {
+                "id": 21,
+                "text": "\u4f60\u8ba4\u4e3a\u4e00\u4e2a\u201c\u597d\u5de5\u5177\u201d\u6700\u91cd\u8981\u7684\u7279\u8d28\u662f\uff1f",
+                "options": [
+                    { "label": "A", "text": "耐用、稳定、不出错。", "vector": [2, -2, 2, 1, -2] },
+                    { "label": "B", "text": "设计精巧、能激发使用欲望。", "vector": [1, 1, -1, 1, 1] },
+                    { "label": "C", "text": "扩展性强、能玩出很多花样。", "vector": [1, 1, -2, 2, 0] },
+                    { "label": "D", "text": "易上手、不需要看说明书。", "vector": [0, -2, 0, -1, -1] }
+                ]
+            },
+            {
+                "id": 22,
+                "text": "听到一个复杂的社会新闻，你的第一反应是？",
+                "options": [
+                    { "label": "A", "text": "查看多方数据，试图还原真相。", "vector": [2, 1, 1, 1, -1] },
+                    { "label": "B", "text": "和身边人讨论，交换看法。", "vector": [-2, 0, -1, -2, 2] },
+                    { "label": "C", "text": "思考背后的结构性原因。", "vector": [0, 2, 0, 2, 1] },
+                    { "label": "D", "text": "关注当事人的具体处境。", "vector": [-1, -1, 0, 0, 1] }
+                ]
+            },
+            {
+                "id": 23,
+                "text": "如果让你失去一种感官一年，你宁愿失去？",
+                "options": [
+                    { "label": "A", "text": "嗅觉。", "vector": [1, 0, 0, 0, 0] },
+                    { "label": "B", "text": "听觉。", "vector": [1, 1, 1, 2, -1] },
+                    { "label": "C", "text": "味觉。", "vector": [0, -1, 1, 0, 0] },
+                    { "label": "D", "text": "触觉。", "vector": [0, 0, 0, 0, 0] }
+                ]
+            },
+            {
+                "id": 24,
+                "text": "\u4f60\u66f4\u4eab\u53d7\u54ea\u79cd\u201c\u80dc\u5229\u201d\uff1f",
+                "options": [
+                    { "label": "A", "text": "说服了持反对意见的众人。", "vector": [-2, 0, -1, -2, 2] },
+                    { "label": "B", "text": "攻克了一个无人能解的技术难题。", "vector": [2, 1, 0, 2, -1] },
+                    { "label": "C", "text": "提前完美地完成了一个庞大计划。", "vector": [1, -1, 2, 1, -2] },
+                    { "label": "D", "text": "在混乱中迅速稳住了局面。", "vector": [0, 0, -2, -1, 1] }
+                ]
+            },
+            {
+                "id": 25,
+                "text": "你理想中的居住地是？",
+                "options": [
+                    { "label": "A", "text": "市中心高层公寓，俯瞰车水马龙。", "vector": [-1, -1, -2, -1, 1] },
+                    { "label": "B", "text": "郊区带院子的小楼，种花养草。", "vector": [1, -2, 1, 2, -1] },
+                    { "label": "C", "text": "山间或海边的独栋，远离人群。", "vector": [2, 0, 2, 2, -2] },
+                    { "label": "D", "text": "文化氛围浓厚的街区，下楼就是咖啡馆书店。", "vector": [-2, 1, 0, 0, 2] }
+                ]
+            },
+            {
+                "id": 26,
+                "text": "\u5bf9\u4e8e\u201c\u89c4\u5219\u201d\uff0c\u4f60\u7684\u6001\u5ea6\u66f4\u63a5\u8fd1\uff1f",
+                "options": [
+                    { "label": "A", "text": "规则是死的，人是活的。", "vector": [-1, 0, -2, 0, 1] },
+                    { "label": "B", "text": "没有规则不成方圆。", "vector": [1, -1, 2, -1, -2] },
+                    { "label": "C", "text": "理解规则背后的原理比遵守更重要。", "vector": [1, 2, 0, 1, 1] },
+                    { "label": "D", "text": "我只遵守我认可的规则。", "vector": [0, 1, -1, 2, 0] }
+                ]
+            },
+            {
+                "id": 27,
+                "text": "你更害怕以下哪种情景？",
+                "options": [
+                    { "label": "A", "text": "在万众瞩目的台上即兴演讲。", "vector": [-1, 0, -1, 0, 1] },
+                    { "label": "B", "text": "一个人被扔在荒野求生。", "vector": [1, -1, -1, 1, -1] },
+                    { "label": "C", "text": "做一件完全没把握、可能搞砸的事。", "vector": [0, 0, 1, 0, 0] },
+                    { "label": "D", "text": "在流水线上做满 12 个小时。", "vector": [1, -2, 2, 0, -2] }
+                ]
+            },
+            {
+                "id": 28,
+                "text": "哪种游戏/运动更吸引你？",
+                "options": [
+                    { "label": "A", "text": "国际象棋或围棋。", "vector": [1, 2, 1, 1, 0] },
+                    { "label": "B", "text": "密室逃脱或剧本杀。", "vector": [-1, 1, -1, -2, 2] },
+                    { "label": "C", "text": "攀岩或长跑。", "vector": [1, -2, 1, 2, -2] },
+                    { "label": "D", "text": "足球或篮球。", "vector": [0, -1, -2, -2, 0] }
+                ]
+            },
+            {
+                "id": 29,
+                "text": "你认为自己更像哪种动物？",
+                "options": [
+                    { "label": "A", "text": "猫（独立、警觉、自得其乐）。", "vector": [1, 1, 0, 2, -1] },
+                    { "label": "B", "text": "狗（忠诚、合群、依赖团队）。", "vector": [-2, -1, -1, -2, 1] },
+                    { "label": "C", "text": "鹰（俯瞰全局、目标明确）。", "vector": [1, 2, -2, 1, 0] },
+                    { "label": "D", "text": "蜜蜂（勤劳、各司其职）。", "vector": [1, -2, 2, -2, -2] }
+                ]
+            },
+            {
+                "id": 30,
+                "text": "如果人类移居火星，你希望承担什么角色？",
+                "options": [
+                    { "label": "A", "text": "基地生命维持系统的工程师。", "vector": [2, 1, 2, 1, -2] },
+                    { "label": "B", "text": "记录火星生活、向地球发送报道的记者。", "vector": [-2, 0, -1, 1, 2] },
+                    { "label": "C", "text": "勘探火星矿藏的地质学家。", "vector": [2, 1, -2, 2, -1] },
+                    { "label": "D", "text": "协调团队矛盾、维持士气的政委。", "vector": [-2, 0, -1, -2, 2] }
+                ]
+            }
+        ];
+
+        // 职业数据 - 示例（请替换为完整94个职业）
+        const OCCUPATIONS_DATA = [
+            {
+                "occupation": "首席执行官 / 总经理",
+                "dimensions": { "D1": -5, "D2": 6, "D3": -8, "D4": -9, "D5": 7 },
+                "role_tag": "复杂系统的调度师"
+            },
+            {
+                "occupation": "运营总监",
+                "dimensions": { "D1": -2, "D2": 4, "D3": -5, "D4": -8, "D5": 3 },
+                "role_tag": "企业运转的操盘手"
+            },
+            {
+                "occupation": "市场总监",
+                "dimensions": { "D1": -7, "D2": 3, "D3": -7, "D4": -6, "D5": 8 },
+                "role_tag": "品牌声浪的塑造者"
+            },
+            {
+                "occupation": "财务总监",
+                "dimensions": { "D1": 8, "D2": 7, "D3": 6, "D4": 2, "D5": -8 },
+                "role_tag": "数字世界的守门人"
+            },
+            {
+                "occupation": "人力资源总监",
+                "dimensions": { "D1": -9, "D2": 2, "D3": -2, "D4": -7, "D5": 5 },
+                "role_tag": "组织温度的调节师"
+            },
+            {
+                "occupation": "销售总监",
+                "dimensions": { "D1": -8, "D2": -3, "D3": -8, "D4": -6, "D5": 9 },
+                "role_tag": "业绩战车的发动机"
+            },
+            {
+                "occupation": "项目经理 (PM)",
+                "dimensions": { "D1": -2, "D2": 2, "D3": -6, "D4": -10, "D5": 2 },
+                "role_tag": "多方利益的平衡木"
+            },
+            {
+                "occupation": "产品经理",
+                "dimensions": { "D1": -4, "D2": 5, "D3": -7, "D4": -9, "D5": 6 },
+                "role_tag": "需求与实现的翻译官"
+            },
+            {
+                "occupation": "企业管理咨询顾问",
+                "dimensions": { "D1": -3, "D2": 8, "D3": -5, "D4": 2, "D5": 7 },
+                "role_tag": "商业逻辑的诊断师"
+            },
+            {
+                "occupation": "行政经理",
+                "dimensions": { "D1": 4, "D2": -2, "D3": 6, "D4": -3, "D5": -4 },
+                "role_tag": "后方秩序的维护者"
+            },
+            {
+                "occupation": "采购经理",
+                "dimensions": { "D1": 6, "D2": -1, "D3": -3, "D4": -4, "D5": -2 },
+                "role_tag": "供应链的第一道关卡"
+            },
+            {
+                "occupation": "供应链经理",
+                "dimensions": { "D1": 5, "D2": 3, "D3": -7, "D4": -7, "D5": -3 },
+                "role_tag": "货物流动的指挥家"
+            },
+            {
+                "occupation": "软件工程师",
+                "dimensions": { "D1": 8, "D2": 9, "D3": -2, "D4": 6, "D5": -5 },
+                "role_tag": "虚拟世界的建筑师"
+            },
+            {
+                "occupation": "算法工程师 (AI/机器学习)",
+                "dimensions": { "D1": 9, "D2": 10, "D3": -3, "D4": 5, "D5": -6 },
+                "role_tag": "智能背后的数学家"
+            },
+            {
+                "occupation": "数据分析师",
+                "dimensions": { "D1": 7, "D2": 7, "D3": 2, "D4": 3, "D5": 0 },
+                "role_tag": "数据迷宫的引路人"
+            },
+            {
+                "occupation": "网络安全工程师",
+                "dimensions": { "D1": 8, "D2": 6, "D3": -4, "D4": 4, "D5": -7 },
+                "role_tag": "数字边疆的守卫者"
+            },
+            {
+                "occupation": "运维工程师 (SRE/DevOps)",
+                "dimensions": { "D1": 8, "D2": 4, "D3": -5, "D4": -3, "D5": -7 },
+                "role_tag": "系统健康的急诊医生"
+            },
+            {
+                "occupation": "硬件工程师",
+                "dimensions": { "D1": 9, "D2": 3, "D3": 4, "D4": 2, "D5": -8 },
+                "role_tag": "电子骨骼的打造者"
+            },
+            {
+                "occupation": "土木/建筑工程师",
+                "dimensions": { "D1": 7, "D2": 1, "D3": 5, "D4": -6, "D5": -6 },
+                "role_tag": "大地之上的雕塑家"
+            },
+            {
+                "occupation": "机械设计工程师",
+                "dimensions": { "D1": 10, "D2": 0, "D3": 3, "D4": 2, "D5": -8 },
+                "role_tag": "工业躯体的设计师"
+            },
+            {
+                "occupation": "电气工程师",
+                "dimensions": { "D1": 9, "D2": 2, "D3": 2, "D4": 0, "D5": -7 },
+                "role_tag": "能量脉络的掌控者"
+            },
+            {
+                "occupation": "汽车工程师 (新能源方向)",
+                "dimensions": { "D1": 8, "D2": 2, "D3": -4, "D4": -5, "D5": -5 },
+                "role_tag": "未来出行的驱动者"
+            },
+            {
+                "occupation": "生物医药研究员",
+                "dimensions": { "D1": 6, "D2": 8, "D3": 4, "D4": 2, "D5": -4 },
+                "role_tag": "生命密码的解码人"
+            },
+            {
+                "occupation": "环境工程师",
+                "dimensions": { "D1": 4, "D2": 5, "D3": 3, "D4": -2, "D5": -3 },
+                "role_tag": "地球生态的修复师"
+            },
+            {
+                "occupation": "材料工程师",
+                "dimensions": { "D1": 8, "D2": 6, "D3": 4, "D4": 3, "D5": -6 },
+                "role_tag": "微观世界的拼图师"
+            },
+            {
+                "occupation": "机器人工程师",
+                "dimensions": { "D1": 9, "D2": 7, "D3": -5, "D4": -2, "D5": -7 },
+                "role_tag": "智能肢体的创造者"
+            },
+            {
+                "occupation": "用户体验设计师 (UX/UI)",
+                "dimensions": { "D1": -3, "D2": 5, "D3": -4, "D4": 0, "D5": 6 },
+                "role_tag": "人机对话的同声传译"
+            },
+            {
+                "occupation": "游戏策划/开发",
+                "dimensions": { "D1": 2, "D2": 7, "D3": -7, "D4": -6, "D5": 7 },
+                "role_tag": "第二人生的上帝"
+            },
+            {
+                "occupation": "产品结构设计师 (工业设计)",
+                "dimensions": { "D1": 8, "D2": 3, "D3": 0, "D4": 2, "D5": 3 },
+                "role_tag": "美学与功能的粘合剂"
+            },
+            {
+                "occupation": "质量控制工程师",
+                "dimensions": { "D1": 8, "D2": -3, "D3": 7, "D4": 0, "D5": -9 },
+                "role_tag": "完美标准的守护神"
+            },
+            {
+                "occupation": "临床医生",
+                "dimensions": { "D1": 0, "D2": 4, "D3": -6, "D4": -8, "D5": -8 },
+                "role_tag": "生死边缘的决策者"
+            },
+            {
+                "occupation": "注册护士",
+                "dimensions": { "D1": -8, "D2": -6, "D3": -4, "D4": -10, "D5": -8 },
+                "role_tag": "病痛黑夜的提灯人"
+            },
+            {
+                "occupation": "药剂师",
+                "dimensions": { "D1": 7, "D2": 3, "D3": 6, "D4": 1, "D5": -7 },
+                "role_tag": "药物安全的最后防线"
+            },
+            {
+                "occupation": "牙医",
+                "dimensions": { "D1": 6, "D2": -5, "D3": 5, "D4": 2, "D5": -6 },
+                "role_tag": "微观雕刻艺术家"
+            },
+            {
+                "occupation": "康复治疗师",
+                "dimensions": { "D1": -4, "D2": -7, "D3": 3, "D4": -4, "D5": -4 },
+                "role_tag": "身体功能的重塑者"
+            },
+            {
+                "occupation": "心理咨询师",
+                "dimensions": { "D1": -10, "D2": 7, "D3": 2, "D4": 5, "D5": 2 },
+                "role_tag": "心灵迷宫的向导"
+            },
+            {
+                "occupation": "兽医",
+                "dimensions": { "D1": 5, "D2": 2, "D3": -2, "D4": -1, "D5": -3 },
+                "role_tag": "不会说话的儿科医生"
+            },
+            {
+                "occupation": "医学检验技师",
+                "dimensions": { "D1": 9, "D2": 0, "D3": 6, "D4": 4, "D5": -9 },
+                "role_tag": "微观证据的猎人"
+            },
+            {
+                "occupation": "营养师",
+                "dimensions": { "D1": 2, "D2": 1, "D3": 5, "D4": 0, "D5": 2 },
+                "role_tag": "身体燃料的配比师"
+            },
+            {
+                "occupation": "养老护理员",
+                "dimensions": { "D1": -9, "D2": -7, "D3": 5, "D4": -4, "D5": -6 },
+                "role_tag": "夕阳时光的搀扶者"
+            },
+            {
+                "occupation": "急救医护人员",
+                "dimensions": { "D1": 0, "D2": -5, "D3": -10, "D4": -9, "D5": -9 },
+                "role_tag": "死神赛跑的第一棒"
+            },
+            {
+                "occupation": "公共卫生专家",
+                "dimensions": { "D1": -4, "D2": 6, "D3": 3, "D4": -7, "D5": 1 },
+                "role_tag": "人群健康的瞭望塔"
+            },
+            {
+                "occupation": "大学教师/研究员",
+                "dimensions": { "D1": 3, "D2": 9, "D3": 6, "D4": 7, "D5": 5 },
+                "role_tag": "知识边疆的拓荒者"
+            },
+            {
+                "occupation": "中小学教师",
+                "dimensions": { "D1": -6, "D2": -1, "D3": 4, "D4": -8, "D5": 6 },
+                "role_tag": "灵魂工程的砌筑工"
+            },
+            {
+                "occupation": "特殊教育教师",
+                "dimensions": { "D1": -10, "D2": -3, "D3": 7, "D4": -9, "D5": 1 },
+                "role_tag": "折翼天使的守护人"
+            },
+            {
+                "occupation": "职业规划师",
+                "dimensions": { "D1": -8, "D2": 4, "D3": 0, "D4": 4, "D5": 6 },
+                "role_tag": "人生航线的测绘员"
+            },
+            {
+                "occupation": "图书/档案管理员",
+                "dimensions": { "D1": 7, "D2": -2, "D3": 9, "D4": 8, "D5": -9 },
+                "role_tag": "人类记忆的保管员"
+            },
+            {
+                "occupation": "社会工作者",
+                "dimensions": { "D1": -10, "D2": 0, "D3": -1, "D4": -7, "D5": 2 },
+                "role_tag": "社会毛细血管的疏通者"
+            },
+            {
+                "occupation": "记者/编辑",
+                "dimensions": { "D1": -5, "D2": 4, "D3": -9, "D4": 1, "D5": 8 },
+                "role_tag": "真相拼图的还原者"
+            },
+            {
+                "occupation": "律师",
+                "dimensions": { "D1": -6, "D2": 8, "D3": -6, "D4": -3, "D5": 10 },
+                "role_tag": "规则战场的角斗士"
+            },
+            {
+                "occupation": "法律助理/法务",
+                "dimensions": { "D1": 2, "D2": 5, "D3": 5, "D4": 0, "D5": -4 },
+                "role_tag": "风险控制的守门人"
+            },
+            {
+                "occupation": "策展人/博物馆专员",
+                "dimensions": { "D1": 3, "D2": 5, "D3": 4, "D4": -2, "D5": 5 },
+                "role_tag": "时空故事的讲述者"
+            },
+            {
+                "occupation": "作家/编剧",
+                "dimensions": { "D1": 0, "D2": 10, "D3": -5, "D4": 10, "D5": 10 },
+                "role_tag": "平行宇宙的创造神"
+            },
+            {
+                "occupation": "视觉设计师 (平面/品牌)",
+                "dimensions": { "D1": 4, "D2": 5, "D3": -3, "D4": 5, "D5": 8 },
+                "role_tag": "视觉符号的魔术师"
+            },
+            {
+                "occupation": "摄影师/摄像师",
+                "dimensions": { "D1": 4, "D2": -2, "D3": -7, "D4": 3, "D5": 4 },
+                "role_tag": "光影瞬间的捕手"
+            },
+            {
+                "occupation": "音乐人/作曲",
+                "dimensions": { "D1": 5, "D2": 9, "D3": -6, "D4": 7, "D5": 9 },
+                "role_tag": "情绪频率的调制师"
+            },
+            {
+                "occupation": "演员/配音演员",
+                "dimensions": { "D1": -9, "D2": 2, "D3": -9, "D4": -7, "D5": 10 },
+                "role_tag": "他人灵魂的容器"
+            },
+            {
+                "occupation": "室内设计师",
+                "dimensions": { "D1": 5, "D2": 0, "D3": -2, "D4": 3, "D5": 6 },
+                "role_tag": "居住剧本的编排者"
+            },
+            {
+                "occupation": "时装设计师",
+                "dimensions": { "D1": 5, "D2": 4, "D3": -8, "D4": 4, "D5": 7 },
+                "role_tag": "身体建筑的外立面师"
+            },
+            {
+                "occupation": "动画师",
+                "dimensions": { "D1": 6, "D2": 6, "D3": -4, "D4": 2, "D5": 5 },
+                "role_tag": "静止生命的赋予者"
+            },
+            {
+                "occupation": "厨师",
+                "dimensions": { "D1": 8, "D2": -6, "D3": -5, "D4": -5, "D5": -9 },
+                "role_tag": "味觉化学的实验家"
+            },
+            {
+                "occupation": "烘焙师/面点师",
+                "dimensions": { "D1": 9, "D2": -7, "D3": 5, "D4": 4, "D5": -9 },
+                "role_tag": "面粉与黄油的雕塑家"
+            },
+            {
+                "occupation": "电工",
+                "dimensions": { "D1": 10, "D2": -4, "D3": 3, "D4": 6, "D5": -10 },
+                "role_tag": "光明通路的接线员"
+            },
+            {
+                "occupation": "水管/暖通技工",
+                "dimensions": { "D1": 10, "D2": -8, "D3": 4, "D4": 3, "D5": -10 },
+                "role_tag": "建筑血脉的外科医生"
+            },
+            {
+                "occupation": "汽车维修技师",
+                "dimensions": { "D1": 10, "D2": -5, "D3": -3, "D4": 2, "D5": -9 },
+                "role_tag": "机械心脏的听诊师"
+            },
+            {
+                "occupation": "精密仪器维修师",
+                "dimensions": { "D1": 10, "D2": 1, "D3": 7, "D4": 9, "D5": -10 },
+                "role_tag": "误差世界的矫正者"
+            },
+            {
+                "occupation": "焊工",
+                "dimensions": { "D1": 10, "D2": -6, "D3": 3, "D4": 2, "D5": -10 },
+                "role_tag": "钢铁之间的缝合师"
+            },
+            {
+                "occupation": "木匠/家具修复师",
+                "dimensions": { "D1": 10, "D2": -8, "D3": 5, "D4": 7, "D5": -10 },
+                "role_tag": "木纹岁月的抚平者"
+            },
+            {
+                "occupation": "园艺师/花艺师",
+                "dimensions": { "D1": 7, "D2": -3, "D3": 2, "D4": 5, "D5": 0 },
+                "role_tag": "植物美学的造型师"
+            },
+            {
+                "occupation": "美容/美发师",
+                "dimensions": { "D1": -3, "D2": -6, "D3": -4, "D4": 1, "D5": 4 },
+                "role_tag": "发肤细节的修饰者"
+            },
+            {
+                "occupation": "民航飞行员",
+                "dimensions": { "D1": 6, "D2": 2, "D3": -6, "D4": -5, "D5": -9 },
+                "role_tag": "万米高空的定心丸"
+            },
+            {
+                "occupation": "船长/船员",
+                "dimensions": { "D1": 5, "D2": 0, "D3": -7, "D4": -8, "D5": -7 },
+                "role_tag": "怒海波涛的驾驭者"
+            },
+            {
+                "occupation": "卡车/货车司机",
+                "dimensions": { "D1": 7, "D2": -9, "D3": -4, "D4": 10, "D5": -10 },
+                "role_tag": "公路之王的孤独旅程"
+            },
+            {
+                "occupation": "快递/物流调度员",
+                "dimensions": { "D1": 3, "D2": -3, "D3": -8, "D4": -4, "D5": -5 },
+                "role_tag": "城市脉络的疏通剂"
+            },
+            {
+                "occupation": "导游",
+                "dimensions": { "D1": -7, "D2": -5, "D3": -8, "D4": -6, "D5": 8 },
+                "role_tag": "山水人文的扩音器"
+            },
+            {
+                "occupation": "健身/户外运动教练",
+                "dimensions": { "D1": -2, "D2": -8, "D3": -5, "D4": -1, "D5": 5 },
+                "role_tag": "身体极限的鼓舞者"
+            },
+            {
+                "occupation": "农民/农场主",
+                "dimensions": { "D1": 6, "D2": -4, "D3": 1, "D4": 7, "D5": -8 },
+                "role_tag": "大地脉搏的应和者"
+            },
+            {
+                "occupation": "动物饲养员",
+                "dimensions": { "D1": 8, "D2": -5, "D3": 4, "D4": 5, "D5": -8 },
+                "role_tag": "跨物种的沉默挚友"
+            },
+            {
+                "occupation": "物理学家",
+                "dimensions": { "D1": 8, "D2": 10, "D3": 4, "D4": 7, "D5": 0 },
+                "role_tag": "宇宙法则的解谜人"
+            },
+            {
+                "occupation": "化学家",
+                "dimensions": { "D1": 9, "D2": 8, "D3": 3, "D4": 5, "D5": -3 },
+                "role_tag": "分子世界的搭建师"
+            },
+            {
+                "occupation": "生物学家",
+                "dimensions": { "D1": 5, "D2": 7, "D3": 0, "D4": 2, "D5": 0 },
+                "role_tag": "生命蓝图的解读者"
+            },
+            {
+                "occupation": "地质学家",
+                "dimensions": { "D1": 8, "D2": 4, "D3": -2, "D4": 1, "D5": -4 },
+                "role_tag": "地球史书的破译者"
+            },
+            {
+                "occupation": "天文学家",
+                "dimensions": { "D1": 9, "D2": 10, "D3": 5, "D4": 8, "D5": -2 },
+                "role_tag": "星尘大海的遥望者"
+            },
+            {
+                "occupation": "经济学家/行业研究员",
+                "dimensions": { "D1": 2, "D2": 9, "D3": -3, "D4": 4, "D5": 3 },
+                "role_tag": "社会潮汐的分析师"
+            },
+            {
+                "occupation": "统计学家",
+                "dimensions": { "D1": 8, "D2": 9, "D3": 6, "D4": 5, "D5": -5 },
+                "role_tag": "不确定性中的定数"
+            },
+            {
+                "occupation": "社会学家/人类学家",
+                "dimensions": { "D1": -7, "D2": 8, "D3": -1, "D4": 0, "D5": 2 },
+                "role_tag": "人群规律的观察者"
+            },
+            {
+                "occupation": "气候/气象学家",
+                "dimensions": { "D1": 7, "D2": 7, "D3": -4, "D4": 3, "D5": -1 },
+                "role_tag": "风云变幻的预言家"
+            },
+            {
+                "occupation": "法医",
+                "dimensions": { "D1": 10, "D2": 5, "D3": 5, "D4": 6, "D5": -9 },
+                "role_tag": "亡者证言的翻译官"
+            },
+            {
+                "occupation": "旅拍定制师",
+                "dimensions": { "D1": -2, "D2": -4, "D3": -6, "D4": -2, "D5": 7 },
+                "role_tag": "美好回忆的导演兼摄像"
+            },
+            {
+                "occupation": "整理收纳师",
+                "dimensions": { "D1": 8, "D2": -9, "D3": 4, "D4": 5, "D5": -8 },
+                "role_tag": "生活空间的魔法建筑师"
+            },
+            {
+                "occupation": "电竞选手",
+                "dimensions": { "D1": 6, "D2": 2, "D3": -9, "D4": -10, "D5": -6 },
+                "role_tag": "数字战场的战术执行者"
+            },
+            {
+                "occupation": "直播电商主播",
+                "dimensions": { "D1": -10, "D2": -5, "D3": -7, "D4": -3, "D5": 10 },
+                "role_tag": "流量世界的共情表达者"
+            },
+            {
+                "occupation": "低空经济运营师",
+                "dimensions": { "D1": 3, "D2": 5, "D3": -6, "D4": -7, "D5": 2 },
+                "role_tag": "天空流量的协调指挥官"
+            },
+            {
+                "occupation": "养老服务师",
+                "dimensions": { "D1": -9, "D2": -6, "D3": 5, "D4": -5, "D5": -3 },
+                "role_tag": "银发时光的温暖守护者"
+            }
+        ];
+
+        // ============================================
+        // 应用状态管理
+        // ============================================
+        const state = {
+            currentPage: 'welcome',
+            currentQuestionIndex: 0,
+            answers: new Array(QUESTIONS_DATA.length).fill(null),
+            userVector: [0, 0, 0, 0, 0]
+        };
+
+        // ============================================
+        // 页面切换函数
+        // ============================================
+        function showPage(pageName) {
+            const pages = {
+                'welcome': 'welcomePage',
+                'quiz': 'quizPage',
+                'loading': 'loadingPage',
+                'result': 'resultPage'
+            };
+
+            Object.values(pages).forEach(pageId => {
+                document.getElementById(pageId).classList.add('hidden');
+            });
+
+            document.getElementById(pages[pageName]).classList.remove('hidden');
+            state.currentPage = pageName;
+        }
+
+        // ============================================
+        // 测试流程控制
+        // ============================================
+        function startQuiz() {
+            state.currentQuestionIndex = 0;
+            state.answers = new Array(QUESTIONS_DATA.length).fill(null);
+            showPage('quiz');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const question = QUESTIONS_DATA[state.currentQuestionIndex];
+            const questionIndex = state.currentQuestionIndex;
+
+            // 更新进度
+            const progress = ((questionIndex + 1) / QUESTIONS_DATA.length) * 100;
+            document.getElementById('progressText').textContent = `第 ${questionIndex + 1} 题 / 共 ${QUESTIONS_DATA.length} 题`;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
+
+            // 渲染题目
+            document.getElementById('questionText').textContent = question.text;
+
+            // 渲染选项
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const optionCard = document.createElement('div');
+                optionCard.className = 'option-card';
+                if (state.answers[questionIndex] === index) {
+                    optionCard.classList.add('selected');
+                }
+                optionCard.innerHTML = `
+                    <span class="option-label">${option.label}.</span>
+                    ${option.text}
+                `;
+                optionCard.addEventListener('click', () => selectOption(index));
+                optionsContainer.appendChild(optionCard);
+            });
+
+            // 更新导航按钮状态
+            document.getElementById('btnPrev').disabled = questionIndex === 0;
+            
+            // 如果是最后一题，按钮文字改为「查看结果」
+            const btnNext = document.getElementById('btnNext');
+            if (questionIndex === QUESTIONS_DATA.length - 1) {
+                btnNext.textContent = '查看结果';
+            } else {
+                btnNext.textContent = '下一题';
+            }
+            
+            btnNext.disabled = state.answers[questionIndex] === null;
+        }
+
+        function selectOption(optionIndex) {
+            const questionIndex = state.currentQuestionIndex;
+            state.answers[questionIndex] = optionIndex;
+
+            // 更新UI
+            const optionCards = document.querySelectorAll('.option-card');
+            optionCards.forEach((card, index) => {
+                card.classList.toggle('selected', index === optionIndex);
+            });
+
+            document.getElementById('btnNext').disabled = false;
+
+            // 自动跳转下一题
+            setTimeout(() => {
+                if (questionIndex < QUESTIONS_DATA.length - 1) {
+                    nextQuestion();
+                }
+            }, 300);
+        }
+
+        function nextQuestion() {
+            if (state.answers[state.currentQuestionIndex] === null) return;
+
+            if (state.currentQuestionIndex < QUESTIONS_DATA.length - 1) {
+                state.currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                // 最后一题，计算结果
+                calculateResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (state.currentQuestionIndex > 0) {
+                state.currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        // ============================================
+        // 结果计算
+        // ============================================
+        function calculateResults() {
+            showPage('loading');
+
+            // 模拟计算延迟，给用户一个过渡感
+            setTimeout(() => {
+                // 计算用户向量
+                const userVector = [0, 0, 0, 0, 0];
+                
+                state.answers.forEach((answerIndex, questionIndex) => {
+                    if (answerIndex !== null) {
+                        const selectedOption = QUESTIONS_DATA[questionIndex].options[answerIndex];
+                        for (let i = 0; i < 5; i++) {
+                            userVector[i] += selectedOption.vector[i];
+                        }
+                    }
+                });
+
+                // 计算与所有职业的余弦相似度
+                const similarities = OCCUPATIONS_DATA.map(occupation => {
+                    const occVector = [
+                        occupation.dimensions.D1,
+                        occupation.dimensions.D2,
+                        occupation.dimensions.D3,
+                        occupation.dimensions.D4,
+                        occupation.dimensions.D5
+                    ];
+                    
+                    const similarity = cosineSimilarity(userVector, occVector);
+                    return {
+                        ...occupation,
+                        similarity: similarity
+                    };
+                });
+
+                // 排序并取前3
+                const top3 = similarities
+                    .sort((a, b) => b.similarity - a.similarity)
+                    .slice(0, 3);
+
+                // 渲染结果
+                renderResults(top3);
+                showPage('result');
+            }, 2000);
+        }
+
+        function cosineSimilarity(vectorA, vectorB) {
+            let dotProduct = 0;
+            let magnitudeA = 0;
+            let magnitudeB = 0;
+
+            for (let i = 0; i < vectorA.length; i++) {
+                dotProduct += vectorA[i] * vectorB[i];
+                magnitudeA += vectorA[i] * vectorA[i];
+                magnitudeB += vectorB[i] * vectorB[i];
+            }
+
+            magnitudeA = Math.sqrt(magnitudeA);
+            magnitudeB = Math.sqrt(magnitudeB);
+
+            if (magnitudeA === 0 || magnitudeB === 0) {
+                return 0;
+            }
+
+            // 余弦相似度范围是[-1, 1]，映射到[0, 1]
+            const similarity = dotProduct / (magnitudeA * magnitudeB);
+            return (similarity + 1) / 2;
+        }
+
+        function renderResults(top3) {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '';
+
+            // 渲染第一匹配（大卡片）
+            const primaryCard = createResultCard(top3[0], 0, true);
+            container.appendChild(primaryCard);
+
+            // 渲染第二、三匹配（小卡片）
+            top3.slice(1).forEach((result, index) => {
+                const secondaryCard = createResultCard(result, index + 1, false);
+                container.appendChild(secondaryCard);
+            });
+        }
+
+        function createResultCard(result, rank, isPrimary) {
+            const card = document.createElement('div');
+            card.className = `result-card ${isPrimary ? 'primary' : 'secondary'}`;
+            
+            // 将相似度映射为百分比
+            const percentage = Math.round(result.similarity * 100);
+            
+            const rankLabels = ['第一匹配', '第二匹配', '第三匹配'];
+
+            card.innerHTML = `
+                <div class="rank-badge">${rankLabels[rank]}</div>
+                <div class="occupation-name">${result.occupation}</div>
+                <div class="role-tag">${result.role_tag}</div>
+                <div class="match-percentage">
+                    <div class="percentage-bar">
+                        <div class="percentage-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="percentage-text">${percentage}%</div>
+                </div>
+            `;
+
+            // 动画效果：延迟填充进度条
+            setTimeout(() => {
+                card.querySelector('.percentage-fill').style.width = `${percentage}%`;
+            }, 300);
+
+            return card;
+        }
+
+        function restartQuiz() {
+            state.currentQuestionIndex = 0;
+            state.answers = new Array(QUESTIONS_DATA.length).fill(null);
+            showPage('welcome');
+        }
+
+        // ============================================
+        // 数据加载说明（如需使用外部JSON文件）
+        // ============================================
+        /*
+        如果需要从外部JSON文件加载数据，可以使用以下代码替换上方的常量定义：
+        
+        async function loadData() {
+            try {
+                const [questionsRes, occupationsRes] = await Promise.all([
+                    fetch('./questions.json'),
+                    fetch('./occupations.json')
+                ]);
+                
+                const questions = await questionsRes.json();
+                const occupations = await occupationsRes.json();
+                
+                // 将数据赋值给全局变量
+                window.QUESTIONS_DATA = questions;
+                window.OCCUPATIONS_DATA = occupations;
+                
+                // 初始化应用
+                initApp();
+            } catch (error) {
+                console.error('加载数据失败:', error);
+            }
+        }
+        
+        // 调用 loadData() 代替直接使用常量
+        */
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 应用已就绪，等待用户操作
+        });
+    </script>
+</body>
+</html>
